@@ -1,21 +1,18 @@
 # устанавливаем переменные среды окружения
 port:=:7540
 envRunAddr:=TODO_PORT=$(port)
-#envDatabaseDSN:=DATABASE_DSN="user=postgres password=postgres host=localhost port=5432 dbname=urlshortdb sslmode=disable"
+envDatabaseDSN:=TODO_DBFILE=./storage/scheduler.db
 
 server:
 				@echo "Running server"
-				$(envRunAddr)  go run ./cmd/*.go
+				$(envRunAddr) $(envDatabaseDSN) go run ./cmd/*.go
 .PHONY: server
 
-db:
-				@echo "Running server"
-				$(envRunAddr) $(envBaseURL) $(envDatabaseDSN) go run ./cmd/shortener/main.go
-.PHONY: server
-
-defaultserver:
+TestDBserver:
 				@echo "Running default server "
-				go run ./cmd/main.go
+				go build -o ./cmd/final_project ./cmd/*.go
+				$(envRunAddr) $(envDatabaseDSN) ./cmd/final_project
+.PHONY: TestDBserver
 
 test:
 				@echo "Running unit tests"
@@ -23,8 +20,10 @@ test:
 .PHONY: test
 
 autotest:
-				@echo "Runing autotest"
-				go test -count=1 -run ^TestApp$ ./tests
+				@echo "Running unit tests"
+				go test -v ./lib/.
+				go test -count=1 -run ^TestApp$  ./tests
+				go test -count=1 -run ^TestDB$  ./tests
 .PHONY: autotest
 
 testcover:

@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -26,6 +27,8 @@ func count(db *sqlx.DB) (int, error) {
 func openDB(t *testing.T) *sqlx.DB {
 	dbfile := DBFile
 	envFile := os.Getenv("TODO_DBFILE")
+	fmt.Println(dbfile, "dbfile")
+	fmt.Println(envFile, "envFile")
 	if len(envFile) > 0 {
 		dbfile = envFile
 	}

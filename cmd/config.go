@@ -5,29 +5,33 @@ import (
 	"os"
 )
 
-//уровни логирования
+// уровни логирования
 const (
 	envLocal = "local" //уровень по умолчанию
 	envDev   = "dev"
 	envProd  = "prod"
 )
 
-//флаги конфигурации
-var FlagServerPort string //адрес порта
+// флаги конфигурации
+var FlagServerPort string  //адрес порта
 var FlagLevelLogger string //уровень логирования
-// var FlagDatabaseDSN string      //наименование базы данных
+var FlagDatabaseDSN string //наименование базы данных
 
-//функция инициализации флагов
+// функция инициализации флагов
 func ParseFlags() {
+	//инициализация флагов по умолчанию
+	defaultRunAddr := ":7540"                      //адрес порта по умолчанию
+	defaultLevelLogger := "local"                  //уровень логирования по умолчанию
+	defaultDatabaseDSN := "./storage/scheduler.db" //наименование базы данных по умолчанию
 
-	defaultRunAddr := ":7540" //адрес порта по умолчанию
-	defaultLevelLogger := "local" //уровень логирования по умолчанию
+	flag.StringVar(&FlagServerPort, "a", defaultRunAddr, "port to run server")        //инициализация флага адреса порта
+	flag.StringVar(&FlagDatabaseDSN, "d", defaultDatabaseDSN, "name database SQLite") //инициализация флага наименования базы данных
+	flag.StringVar(&FlagLevelLogger, "l", defaultLevelLogger, "log level")            //инициализация флага уровня логирования
 
-	flag.StringVar(&FlagServerPort, "a", defaultRunAddr, "port to run server") //инициализация флага адреса порта
-	//flag.StringVar(&FlagDatabaseDSN, "d", defaultDatabaseDSN, "name database Postgres")
-	flag.StringVar(&FlagLevelLogger, "l", defaultLevelLogger, "log level") //инициализация флага уровня логирования
-
+	//парсинг флагов	
 	flag.Parse()
+
+	//парсинг переменных окружения
 
 	if envRunAddr := os.Getenv("TODO_PORT"); envRunAddr != "" {
 		FlagServerPort = envRunAddr
@@ -35,8 +39,7 @@ func ParseFlags() {
 	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
 		FlagLevelLogger = envLogLevel
 	}
-	//envDatabaseDSN, ok := os.LookupEnv("DATABASE_URI")
-	//if ok && envDatabaseDSN != "" {
-	//	FlagDatabaseDSN = envDatabaseDSN
-	//}
+	if envDatabaseDSN := os.Getenv("TODO_DBFILE"); envDatabaseDSN != "" {
+		FlagDatabaseDSN = envDatabaseDSN
+	}
 }
