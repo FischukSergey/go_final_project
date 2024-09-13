@@ -24,7 +24,7 @@ func NextDate(now time.Time, date string, repeat string) (string, error) {
 	switch repeatParts[0] {
 	case "y": // если параметр y, то добавляем год
 		newDate = dateTime.AddDate(1, 0, 0)
-		for newDate.Before(now.AddDate(0, 0, 1)) {
+		for newDate.Before(now) {
 				newDate = newDate.AddDate(1, 0, 0) // если новая дата меньше текущей, то добавляем еще один год
 		}
 		
@@ -38,8 +38,8 @@ func NextDate(now time.Time, date string, repeat string) (string, error) {
 				return "", fmt.Errorf("количество дней не может быть больше 400")
 			}
 			newDate = dateTime.AddDate(0, 0, days) // добавляем дни
-			for newDate.Before(now.AddDate(0, 0, 1)) {
-				newDate = newDate.AddDate(0, 0, 1) // если новая дата меньше текущей, то добавляем еще один день
+			for newDate.Before(now) {
+				newDate = newDate.AddDate(0, 0, days) // если новая дата меньше текущей, то добавляем еще раз дни
 			}
 		} else {
 			return "", fmt.Errorf("не указан параметр количества дней")

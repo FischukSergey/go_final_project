@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/FischukSergey/go_final_project/internal/handlers/nextdate"
+	"github.com/FischukSergey/go_final_project/internal/handlers/savetask"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/storage"
 
@@ -27,21 +28,23 @@ func main() {
 	defer db.Close()
 	log.Info("База данных подключена", slog.String("database", FlagDatabaseDSN))
 
+	//инициализируем роутер
 	r := chi.NewRouter()
-	root := "./web"
+	root := "./web" //путь к статическим файлам
 	//подключаем обработчик для статических файлов
 	fileServer := http.FileServer(http.Dir(root))
 	r.Handle("/*", fileServer)
 
-	//подключаем обработчик для api
+	//подключаем обработчики для api
 	r.Get("/api/nextdate", nextdate.NextDate(log))
+	r.Post("/api/task", savetask.SaveTask(log, db))
 
-	srv := &http.Server{ //запускаем сервер
-		Addr:         FlagServerPort,
-		Handler:      r,
-		ReadTimeout:  4 * time.Second,
-		WriteTimeout: 4 * time.Second,
-		IdleTimeout:  30 * time.Second,
+	srv := &http.Server{ //инициализируем сервер
+		Addr:         FlagServerPort,   //порт сервера
+		Handler:      r,                //роутер
+		ReadTimeout:  4 * time.Second,  //время на чтение запроса
+		WriteTimeout: 4 * time.Second,  //время на запись ответа
+		IdleTimeout:  30 * time.Second, //время на закрытие соединения
 	}
 
 	log.Info("Запуск сервера")

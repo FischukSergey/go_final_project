@@ -21,10 +21,17 @@ test:
 
 autotest:
 				@echo "Running unit tests"
-				go test -v ./lib/.
 				go test -count=1 -run ^TestApp$  ./tests
 				go test -count=1 -run ^TestDB$  ./tests
+				go test -count=1 -run ^TestNextDate$  ./tests
+				go test -count=1 -run ^TestAddTask$  ./tests
 .PHONY: autotest
+
+statictest:
+				@echo "Running static tests"
+				go vet ./...
+				go test -v ./internal/lib
+.PHONY:statictest
 
 testcover:
 				@echo "Running unit tests into file"
