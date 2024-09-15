@@ -32,6 +32,7 @@ func SaveTask(log *slog.Logger, db SaveTasker) http.HandlerFunc {
 			return
 		}
 
+		
 		//проверяем поля запроса
 		//проверка на наличие заголовка (обязательное поле)
 		if task.Title == "" { 

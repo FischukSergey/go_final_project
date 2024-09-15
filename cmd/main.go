@@ -9,9 +9,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/FischukSergey/go_final_project/internal/handlers/getidtask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/gettask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/nextdate"
 	"github.com/FischukSergey/go_final_project/internal/handlers/savetask"
+	"github.com/FischukSergey/go_final_project/internal/handlers/updatetask"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/storage"
 
@@ -40,6 +42,8 @@ func main() {
 	r.Get("/api/nextdate", nextdate.NextDate(log))
 	r.Post("/api/task", savetask.SaveTask(log, db))
 	r.Get("/api/tasks", gettask.GetTasks(log, db))
+	r.Get("/api/task", getidtask.GetIDTask(log, db))
+	r.Put("/api/task", updatetask.UpdateTask(log, db))
 
 	srv := &http.Server{ //инициализируем сервер
 		Addr:         FlagServerPort,   //порт сервера

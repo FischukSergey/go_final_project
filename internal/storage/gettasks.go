@@ -17,7 +17,7 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 	log.Info("Получение задач", slog.String("dateTask", dateTask), slog.String("search", search))
 	var err error
 	var rows *sql.Rows
-	//var stmt *sql.Stmt
+
 	//выбираем запрос в зависимости от того, что задано
 	switch {
 	case dateTask != "": //если дата задана
@@ -26,7 +26,7 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 	SELECT * FROM scheduler WHERE date = ? LIMIT ?;
 	`)
 		if err != nil {
-			log.Error("Ошибка при подготавливании запроса на получение задач по дате", logger.Err(err))
+			log.Error("Ошибка при подготовке запроса на получение задач по дате", logger.Err(err))
 			return nil, err
 		}
 
@@ -43,7 +43,7 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 	SELECT * FROM scheduler WHERE title LIKE ? OR comment LIKE ? ORDER BY date LIMIT ?;
 	`)
 		if err != nil {
-			log.Error("Ошибка при подготавливании запроса на получение задач по названию", logger.Err(err))
+			log.Error("Ошибка при подготовке запроса на получение задач по названию", logger.Err(err))
 			return nil, err
 		}
 
@@ -60,7 +60,7 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 	SELECT * FROM scheduler ORDER BY date LIMIT ?;
 	`)
 		if err != nil {
-			log.Error("Ошибка при подготавливании запроса на получение всех задач", logger.Err(err))
+			log.Error("Ошибка при подготовке запроса на получение всех задач", logger.Err(err))
 			return nil, err
 		}
 

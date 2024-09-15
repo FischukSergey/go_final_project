@@ -24,6 +24,7 @@ func GetTasks(log *slog.Logger, db IGetTasks) http.HandlerFunc {
 		var dateTask string //строковая переменная для даты
 
 		search = r.URL.Query().Get("search")
+
 		//пробуем парсить дату
 		date, err := time.Parse("02.01.2006", search)
 		if err == nil {
@@ -40,12 +41,7 @@ func GetTasks(log *slog.Logger, db IGetTasks) http.HandlerFunc {
 			render.JSON(w, r, models.SearchTasksResponse{Error: err.Error()})
 			return
 		}
-		// tasksResponse := models.SearchTasksResponse{Tasks: tasks}
-		// if len(tasks) == 0 {
-		// 	w.WriteHeader(http.StatusNoContent)
-		// 	render.JSON(w, r, tasksResponse)
-		// 	return
-		// }
+
 		w.WriteHeader(http.StatusOK)
 		render.JSON(w, r, models.SearchTasksResponse{Tasks: tasks})
 	}
