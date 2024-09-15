@@ -3,11 +3,12 @@ package savetask
 import (
 	"log/slog"
 	"net/http"
-	"time"
+	//"time"
 
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/models"
+
 	"github.com/go-chi/render"
 )
 
@@ -32,7 +33,7 @@ func SaveTask(log *slog.Logger, db SaveTasker) http.HandlerFunc {
 			return
 		}
 
-		
+		/*
 		//проверяем поля запроса
 		//проверка на наличие заголовка (обязательное поле)
 		if task.Title == "" { 
@@ -68,7 +69,16 @@ func SaveTask(log *slog.Logger, db SaveTasker) http.HandlerFunc {
 				return
 			}
 		}
-		
+		*/
+
+		nextDateTask, err := repeatrule.Verification(task)
+		if err != nil {
+			log.Error("Ошибка при верификации задачи", logger.Err(err))
+			w.WriteHeader(http.StatusBadRequest)
+			render.JSON(w, r, models.TaskResponse{Error: "Ошибка при верификации задачи"})
+			return
+		}
+
 		//сохраняем задачу в базу данных
 		id, err := db.SaveTask(models.SaveTask{
 			Date:    nextDateTask,
