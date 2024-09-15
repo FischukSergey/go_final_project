@@ -25,6 +25,7 @@ autotest:
 				go test -count=1 -run ^TestDB$  ./tests
 				go test -count=1 -run ^TestNextDate$  ./tests
 				go test -count=1 -run ^TestAddTask$  ./tests
+				go test -count=1 -run ^TestTasks$  ./tests
 .PHONY: autotest
 
 statictest:

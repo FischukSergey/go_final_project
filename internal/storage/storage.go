@@ -11,13 +11,13 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// структура для хранения данных
+// Storage структура для хранения данных
 type Storage struct {
-	db *sql.DB
+	db  *sql.DB
 	log *slog.Logger
 }
 
-// функция инициализации хранилища
+// NewStorage функция инициализации хранилища
 func NewStorage(storagePath string, log *slog.Logger) (*Storage, error) {
 
 	db, err := sql.Open("sqlite3", storagePath) //инициализируем базу данных
@@ -25,31 +25,43 @@ func NewStorage(storagePath string, log *slog.Logger) (*Storage, error) {
 		log.Error("Ошибка при создании таблицы пользователей", logger.Err(err))
 		return nil, err
 	}
-	ctx := context.Background()
-	stmt, err := db.PrepareContext(ctx, `
+
+	stmt, err := db.Prepare(`
 	CREATE TABLE IF NOT EXISTS scheduler (
 		id INTEGER PRIMARY KEY AUTOINCREMENT, 
-		date CHAR(8),
+		"date" CHAR(8) NOT NULL,
 		title TEXT,
 		comment TEXT,
-		repeat CHAR(128));
-	CREATE INDEX IF NOT EXISTS idx_date ON scheduler (date);`)
+		repeat CHAR(128)
+	    );`,
+	)
 	if err != nil {
-		log.Error("Ошибка при создании таблицы пользователей", logger.Err(err))
+		log.Error("Ошибка при создании шаблона SQL запроса", logger.Err(err))
 		return nil, err
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		err := stmt.Close()
+		if err != nil {
+			log.Error("Ошибка закрытия шаблона SQL запроса", logger.Err(err))
+		}
+	}(stmt)
 
-	_, err = stmt.ExecContext(ctx)
+	_, err = stmt.Exec()
 	if err != nil {
-		log.Error("Ошибка при создании таблицы пользователей", logger.Err(err))
+		log.Error("Ошибка при создании таблицы", logger.Err(err))
 		return nil, err
-	}	
+	}
+
+	_, err = db.Exec("CREATE INDEX IF NOT EXISTS idx_date ON scheduler(date);")
+	if err != nil {
+		log.Error("Ошибка создания индекса", logger.Err(err))
+		return nil, err
+	}
 
 	return &Storage{db: db, log: log}, nil
 }
 
-//SaveTask функция сохранения задачи
+// SaveTask функция сохранения задачи
 func (s *Storage) SaveTask(task models.SaveTask) (string, error) {
 	ctx := context.Background()
 	const op = "storage.SaveTask"

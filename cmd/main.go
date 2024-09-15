@@ -9,12 +9,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/FischukSergey/go_final_project/internal/handlers/gettask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/nextdate"
 	"github.com/FischukSergey/go_final_project/internal/handlers/savetask"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/storage"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -28,16 +29,17 @@ func main() {
 	defer db.Close()
 	log.Info("База данных подключена", slog.String("database", FlagDatabaseDSN))
 
-	//инициализируем роутер
 	r := chi.NewRouter()
-	root := "./web" //путь к статическим файлам
-	//подключаем обработчик для статических файлов
-	fileServer := http.FileServer(http.Dir(root))
-	r.Handle("/*", fileServer)
+	// Создаем файловый сервер для директории web
+	webDir := http.Dir("web")
+	webFileServer := http.FileServer(webDir)
+	// Обслуживаем файлы из директории web
+	r.Handle("/*", webFileServer)
 
 	//подключаем обработчики для api
 	r.Get("/api/nextdate", nextdate.NextDate(log))
 	r.Post("/api/task", savetask.SaveTask(log, db))
+	r.Get("/api/tasks", gettask.GetTasks(log, db))
 
 	srv := &http.Server{ //инициализируем сервер
 		Addr:         FlagServerPort,   //порт сервера
@@ -72,6 +74,8 @@ func main() {
 		return
 	}
 	log.Info("api server остановлен")
+
+	//последним по defer db.Close() закрываем базу данных
 }
 
 // функция инициализации логера
