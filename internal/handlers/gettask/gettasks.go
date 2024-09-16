@@ -11,10 +11,12 @@ import (
 	"github.com/go-chi/render"
 )
 
+// IGetTasks интерфейс для получения задач
 type IGetTasks interface {
 	GetTasks(ctx context.Context, dateTask, search string) ([]models.SearchTask, error)
 }
 
+// GetTasks получает задачи из базы данных
 func GetTasks(log *slog.Logger, db IGetTasks) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("Получение задач")

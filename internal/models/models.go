@@ -44,5 +44,5 @@ type SearchTasksResponse struct {
 
 // ErrorResponse структура для ответа на запрос с ошибкой
 type ErrorResponse struct {
-	Error string `json:"error"`
+	Error string `json:"error,omitempty"`
 }	

@@ -52,6 +52,6 @@ func UpdateTask(log *slog.Logger, db *storage.Storage) http.HandlerFunc {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		render.JSON(w, r, models.SearchTask{})
+		render.JSON(w, r, models.ErrorResponse{})
 	}
 }

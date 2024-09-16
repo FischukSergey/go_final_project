@@ -28,6 +28,7 @@ autotest:
 				go test -count=1 -run ^TestTasks$  ./tests
 				go test -count=1 -run ^TestTask$  ./tests
 				go test -count=1 -run ^TestEditTask$  ./tests
+				go test -count=1 -run ^TestDone$  ./tests
 .PHONY: autotest
 
 statictest:

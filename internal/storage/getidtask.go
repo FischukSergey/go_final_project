@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"log/slog"
 
 	"github.com/FischukSergey/go_final_project/internal/logger"
@@ -30,6 +31,10 @@ func (s *Storage) GetIDTask(ctx context.Context, idTask int) (models.SearchTask,
 	var task models.SearchTask
 	err = row.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Error("Задача не найдена", slog.Int("id task", idTask))
+			return models.SearchTask{}, err
+		}
 		log.Error("Ошибка при сканировании строки", logger.Err(err))
 		return models.SearchTask{}, err
 	}
