@@ -2,7 +2,6 @@ package donetask
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -13,12 +12,14 @@ import (
 	"github.com/go-chi/render"
 )
 
+// IDoneTask - интерфейс для работы с задачами
 type IDoneTask interface {
 	DeleteTask(ctx context.Context, idTask int) error
 	GetIDTask(ctx context.Context, idTask int) (models.SearchTask, error)
 	UpdateTask(ctx context.Context, task models.SearchTask) error
 }
 
+// DoneTask - обработчик для завершения задачи
 func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("API: Завершение задачи")
@@ -57,13 +58,8 @@ func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 
 		case task.Repeat != "": //если задача повторяется, то обновляем дату задачи
 			log.Info("Задача повторяется", slog.String("repeat", task.Repeat))
-			// nextDateTask, err := repeatrule.Verification(models.Task{ //получаем следующую дату задачи
-			// 	Title:  task.Title,
-			// 	Date:   task.Date,
-			// 	Repeat: task.Repeat,
-			// })
+			//получаем следующую дату задачи
 			nextDateTask, err := repeatrule.NextDate(time.Now(), task.Date, task.Repeat)
-			fmt.Println(task,nextDateTask)
 			if err != nil {
 				log.Error("Ошибка при получении следующей даты задачи", slog.String("repeat", task.Repeat))
 				w.WriteHeader(http.StatusInternalServerError)
@@ -71,8 +67,9 @@ func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 				return
 			}
 			log.Info("Следующая дата задачи", slog.String("nextDateTask", nextDateTask))
+			//обновляем задачу
 			task.Date = nextDateTask
-			err = db.UpdateTask(r.Context(), task) //обновляем задачу
+			err = db.UpdateTask(r.Context(), task)
 			if err != nil {
 				log.Error("Ошибка при обновлении задачи", slog.String("repeat", task.Repeat))
 				w.WriteHeader(http.StatusInternalServerError)
@@ -92,6 +89,7 @@ func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 				render.JSON(w, r, models.ErrorResponse{Error: err.Error()})
 				return
 			}
+			log.Info("Задача удалена")
 			w.WriteHeader(http.StatusOK)
 			render.JSON(w, r, models.ErrorResponse{})
 			return

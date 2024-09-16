@@ -8,15 +8,15 @@ import (
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/models"
-	"github.com/FischukSergey/go_final_project/internal/storage"
 	"github.com/go-chi/render"
 )
 
+// IUpdateTask интерфейс для обновления задачи
 type IUpdateTask interface {
-	UpdateTask(ctx context.Context, task models.Task) error
+	UpdateTask(ctx context.Context, task models.SearchTask) error
 }
 
-func UpdateTask(log *slog.Logger, db *storage.Storage) http.HandlerFunc {
+func UpdateTask(log *slog.Logger, db IUpdateTask) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Info("Обновление задачи")
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")

@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/FischukSergey/go_final_project/internal/handlers/deletetask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/donetask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/getidtask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/gettask"
@@ -46,6 +47,7 @@ func main() {
 	r.Get("/api/task", getidtask.GetIDTask(log, db))
 	r.Put("/api/task", updatetask.UpdateTask(log, db))
 	r.Post("/api/task/done", donetask.DoneTask(log, db))
+	r.Delete("/api/task", deletetask.DeleteTask(log, db))
 
 	srv := &http.Server{ //инициализируем сервер
 		Addr:         FlagServerPort,   //порт сервера
@@ -84,7 +86,7 @@ func main() {
 	//последним по defer db.Close() закрываем базу данных
 }
 
-// функция инициализации логера
+//setupLogger - функция инициализации логера
 func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 

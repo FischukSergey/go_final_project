@@ -7,7 +7,7 @@ import (
 
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
 )
-
+// NextDate - обработчик для получения следующей даты задачи
 func NextDate(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debug("Next date api started")
