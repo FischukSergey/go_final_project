@@ -2,16 +2,16 @@
 port:=:7540
 envRunAddr:=TODO_PORT=$(port)
 envDatabaseDSN:=TODO_DBFILE=./storage/scheduler.db
-
+envPassword:=TODO_PASSWORD=12345
 server:
 				@echo "Running server"
-				$(envRunAddr) $(envDatabaseDSN) go run ./cmd/*.go
+				$(envRunAddr) $(envDatabaseDSN) $(envPassword) go run ./cmd/*.go
 .PHONY: server
 
 TestDBserver:
 				@echo "Running default server "
 				go build -o ./cmd/final_project ./cmd/*.go
-				$(envRunAddr) $(envDatabaseDSN) ./cmd/final_project
+				$(envRunAddr) $(envDatabaseDSN) $(envPassword) ./cmd/final_project
 .PHONY: TestDBserver
 
 test:

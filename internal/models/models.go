@@ -45,4 +45,12 @@ type SearchTasksResponse struct {
 // ErrorResponse структура для ответа на запрос с ошибкой
 type ErrorResponse struct {
 	Error string `json:"error,omitempty"`
-}	
+}
+
+// User структура для пользователя
+type User struct {
+	ID                int    `json:"id"`
+	Login             string `json:"login"`
+	Password          string `json:"password"`
+	EncryptedPassword string `json:"encrypted_password"`
+}

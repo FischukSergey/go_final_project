@@ -14,9 +14,11 @@ import (
 	"github.com/FischukSergey/go_final_project/internal/handlers/getidtask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/gettask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/nextdate"
+	"github.com/FischukSergey/go_final_project/internal/handlers/register"
 	"github.com/FischukSergey/go_final_project/internal/handlers/savetask"
 	"github.com/FischukSergey/go_final_project/internal/handlers/updatetask"
 	"github.com/FischukSergey/go_final_project/internal/logger"
+	"github.com/FischukSergey/go_final_project/internal/middleware/auth"
 	"github.com/FischukSergey/go_final_project/internal/storage"
 
 	"github.com/go-chi/chi/v5"
@@ -34,6 +36,10 @@ func main() {
 	log.Info("База данных подключена", slog.String("database", FlagDatabaseDSN))
 
 	r := chi.NewRouter()
+
+	//подключаем middleware авторизации
+	//	r.Use(auth.AuthToken(log))
+
 	// Создаем файловый сервер для директории web
 	webDir := http.Dir("web")
 	webFileServer := http.FileServer(webDir)
@@ -42,12 +48,19 @@ func main() {
 
 	//подключаем обработчики для api
 	r.Get("/api/nextdate", nextdate.NextDate(log))
-	r.Post("/api/task", savetask.SaveTask(log, db))
-	r.Get("/api/tasks", gettask.GetTasks(log, db))
-	r.Get("/api/task", getidtask.GetIDTask(log, db))
-	r.Put("/api/task", updatetask.UpdateTask(log, db))
-	r.Post("/api/task/done", donetask.DoneTask(log, db))
-	r.Delete("/api/task", deletetask.DeleteTask(log, db))
+	r.Post("/api/signin", register.Register(log))
+
+	r.Group(func(r chi.Router) {
+		//подключаем middleware авторизации
+		r.Use(auth.AuthToken(log))
+
+		r.Post("/api/task", savetask.SaveTask(log, db))
+		r.Delete("/api/task", deletetask.DeleteTask(log, db))
+		r.Put("/api/task", updatetask.UpdateTask(log, db))
+		r.Get("/api/tasks", gettask.GetTasks(log, db))
+		r.Get("/api/task", getidtask.GetIDTask(log, db))
+		r.Post("/api/task/done", donetask.DoneTask(log, db))
+	})
 
 	srv := &http.Server{ //инициализируем сервер
 		Addr:         FlagServerPort,   //порт сервера
@@ -86,7 +99,7 @@ func main() {
 	//последним по defer db.Close() закрываем базу данных
 }
 
-//setupLogger - функция инициализации логера
+// setupLogger - функция инициализации логера
 func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 
