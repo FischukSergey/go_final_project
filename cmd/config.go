@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	//"flag"
 	"os"
 )
 
@@ -24,22 +24,28 @@ func ParseFlags() {
 	defaultLevelLogger := "local"                  //уровень логирования по умолчанию
 	defaultDatabaseDSN := "./storage/scheduler.db" //наименование базы данных по умолчанию
 
-	flag.StringVar(&FlagServerPort, "a", defaultRunAddr, "port to run server")        //инициализация флага адреса порта
-	flag.StringVar(&FlagDatabaseDSN, "d", defaultDatabaseDSN, "name database SQLite") //инициализация флага наименования базы данных
-	flag.StringVar(&FlagLevelLogger, "l", defaultLevelLogger, "log level")            //инициализация флага уровня логирования
+	// flag.StringVar(&FlagServerPort, "a", defaultRunAddr, "port to run server")        //инициализация флага адреса порта
+	// flag.StringVar(&FlagDatabaseDSN, "d", defaultDatabaseDSN, "name database SQLite") //инициализация флага наименования базы данных
+	// flag.StringVar(&FlagLevelLogger, "l", defaultLevelLogger, "log level")            //инициализация флага уровня логирования
 
 	//парсинг флагов	
-	flag.Parse()
+	//flag.Parse()
 
 	//парсинг переменных окружения
 
 	if envRunAddr := os.Getenv("TODO_PORT"); envRunAddr != "" {
 		FlagServerPort = envRunAddr
+	} else {
+		FlagServerPort = defaultRunAddr
 	}
 	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
 		FlagLevelLogger = envLogLevel
+	} else {
+		FlagLevelLogger = defaultLevelLogger
 	}
 	if envDatabaseDSN := os.Getenv("TODO_DBFILE"); envDatabaseDSN != "" {
 		FlagDatabaseDSN = envDatabaseDSN
+	} else {
+		FlagDatabaseDSN = defaultDatabaseDSN
 	}
 }

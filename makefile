@@ -48,6 +48,16 @@ build:
 				go build -o ./cmd/final_project ./cmd/*.go
 .PHONY: build
 
+dockerbuild:
+	@echo "Running create docker image"
+	docker build -t diplom:v0.0.1 .
+.PHONY: dockerbuild
+
+dockerrun:
+	@echo "Running create docker image"
+	docker run diplom:v0.0.1
+.PHONY: dockerrun
+
 
 # curl -v -X GET 'http://localhost:8080/map'
 # curl -v -d "http://yandex.ru" -X POST 'http://localhost:8080/'
