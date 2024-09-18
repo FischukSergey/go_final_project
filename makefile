@@ -55,7 +55,7 @@ dockerbuild:
 
 dockerrun:
 	@echo "Running create docker image"
-	docker run diplom:v0.0.1
+	docker run -p 7540:7540 -e TODO_PASSWORD=12345 diplom:v0.0.1
 .PHONY: dockerrun
 
 
