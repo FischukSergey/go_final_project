@@ -34,15 +34,28 @@ func Verification(task models.Task) (string, error) {
 
 	//находим следующую дату задачи согласно правилу повторения
 	now := time.Now()
+
 	var nextDateTask string
 	nextDateTask = now.Format("20060102") //дата будет текущей, если не будет вычислена новая
+
+	switch {
 	//если есть правило повторения и дата задачи в прошлом, то ищем следующую дату задачи
-	if task.Repeat != "" && dateTask.Before(now.AddDate(0, 0, -1)) {
+	case task.Repeat != "" && dateTask.Before(now.AddDate(0, 0, -1)):
 		nextDateTask, err = NextDate(now, dateTask.Format("20060102"), task.Repeat)
 		if err != nil {
 			log.Error("Ошибка при получении следующей даты задачи", logger.Err(err))
 			return "", fmt.Errorf("ошибка при получении следующей даты задачи")
 		}
+	case dateTask.After(now.AddDate(0, 0, -1)): //Если дата задач в будущем
+		nextDateTask = dateTask.Format("20060102")
 	}
+	//если есть правило повторения и дата задачи в прошлом, то ищем следующую дату задачи
+	//if task.Repeat != "" && dateTask.Before(now.AddDate(0, 0, -1)) {
+	//	nextDateTask, err = NextDate(now, dateTask.Format("20060102"), task.Repeat)
+	//	if err != nil {
+	//		log.Error("Ошибка при получении следующей даты задачи", logger.Err(err))
+	//		return "", fmt.Errorf("ошибка при получении следующей даты задачи")
+	//	}
+	//}
 	return nextDateTask, nil
 }

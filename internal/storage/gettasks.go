@@ -47,7 +47,8 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 			return nil, err
 		}
 
-		rows, err = stmt.QueryContext(ctx, search, search, models.LimitTasks)
+		searchsql := "%" + search + "%"
+		rows, err = stmt.QueryContext(ctx, searchsql, searchsql, models.LimitTasks)
 		if err != nil {
 			log.Error("Ошибка при выполнении запроса на получение задач", logger.Err(err))
 			return nil, err

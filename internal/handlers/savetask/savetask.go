@@ -33,7 +33,7 @@ func SaveTask(log *slog.Logger, db ISaveTasker) http.HandlerFunc {
 			render.JSON(w, r, models.TaskResponse{Error: "Ошибка при декодировании JSON"})
 			return
 		}
-
+		log.Debug("входные данные:", task)
 		nextDateTask, err := repeatrule.Verification(task) //проверяем задачу
 		if err != nil {
 			log.Error("Ошибка при верификации задачи", logger.Err(err))

@@ -8,11 +8,11 @@ server:
 				$(envRunAddr) $(envDatabaseDSN) $(envPassword) go run ./cmd/*.go
 .PHONY: server
 
-TestDBserver:
+buildserver:
 				@echo "Running default server "
 				go build -o ./cmd/final_project ./cmd/*.go
 				$(envRunAddr) $(envDatabaseDSN) $(envPassword) ./cmd/final_project
-.PHONY: TestDBserver
+.PHONY: buildserver
 
 test:
 				@echo "Running unit tests"
@@ -57,12 +57,3 @@ dockerrun:
 	@echo "Running create docker image"
 	docker run -p 7540:7540 -e TODO_PASSWORD=12345 diplom:v0.0.1
 .PHONY: dockerrun
-
-
-# curl -v -X GET 'http://localhost:8080/map'
-# curl -v -d "http://yandex.ru" -X POST 'http://localhost:8080/'
-# curl -v -d '{"url": "https://codewars.com"}' -H "Content-Type: application/json" POST 'http://localhost:8080/api/shorten'
-# curl -v -X GET 'http://localhost:8080/map' -H "Accept-Encoding: gzip"
-# /Users/sergeymac/dev/urlshortener/shortenertestbeta-darwin-arm64 -test.v -test.run=^TestIteration9$ -binary-path=cmd/shortener/shortener -file-storage-path=tmp/short-url-db.json -source-path=tmp/short-url-db.json -database-dsn=urlshortdb
-# pg_ctl -D /usr/local/pgsql/data stop/start
-# go build -o shortener *.go
