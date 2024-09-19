@@ -1,0 +1,7 @@
+# Ignore IDEA project files 
+.idea/
+# Ignore VSCode settings
+.vscode/
+# Ignore executable files
+*.exe
+*.exe~
