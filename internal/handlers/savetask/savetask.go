@@ -4,8 +4,6 @@ import (
 	"log/slog"
 	"net/http"
 
-	//"time"
-
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
 	"github.com/FischukSergey/go_final_project/internal/logger"
 	"github.com/FischukSergey/go_final_project/internal/models"
@@ -15,7 +13,7 @@ import (
 
 // ISaveTasker интерфейс для сохранения задачи
 type ISaveTasker interface {
-	SaveTask(task models.SaveTask) (string, error)
+	SaveTask(task models.Task) (string, error)
 }
 
 // SaveTask api сохраняет задачу в базу данных
@@ -33,7 +31,7 @@ func SaveTask(log *slog.Logger, db ISaveTasker) http.HandlerFunc {
 			render.JSON(w, r, models.TaskResponse{Error: "Ошибка при декодировании JSON"})
 			return
 		}
-		log.Debug("входные данные:", task)
+		log.Debug("входные данные:", task.Date, task.Title, task.Comment, task.Repeat)
 		nextDateTask, err := repeatrule.Verification(task) //проверяем задачу
 		if err != nil {
 			log.Error("Ошибка при верификации задачи", logger.Err(err))
@@ -42,7 +40,7 @@ func SaveTask(log *slog.Logger, db ISaveTasker) http.HandlerFunc {
 			return
 		}
 
-		id, err := db.SaveTask(models.SaveTask{ //сохраняем задачу в базу данных
+		id, err := db.SaveTask(models.Task{ //сохраняем задачу в базу данных
 			Date:    nextDateTask,
 			Title:   task.Title,
 			Comment: task.Comment,

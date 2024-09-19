@@ -54,6 +54,6 @@ dockerbuild:
 .PHONY: dockerbuild
 
 dockerrun:
-	@echo "Running create docker image"
+	@echo "Running docker container"
 	docker run -p 7540:7540 -e TODO_PASSWORD=12345 diplom:v0.0.1
 .PHONY: dockerrun

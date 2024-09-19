@@ -10,7 +10,7 @@ import (
 )
 
 // UpdateTask обновляет задачу в базе данных
-func (s *Storage) UpdateTask(ctx context.Context, task models.SearchTask) error {
+func (s *Storage) UpdateTask(ctx context.Context, task models.Task) error {
 	op := "storage.UpdateTask"
 	log := s.log.With(
 		slog.String("op", op),

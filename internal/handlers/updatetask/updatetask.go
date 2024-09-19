@@ -13,7 +13,7 @@ import (
 
 // IUpdateTask интерфейс для обновления задачи
 type IUpdateTask interface {
-	UpdateTask(ctx context.Context, task models.SearchTask) error
+	UpdateTask(ctx context.Context, task models.Task) error
 }
 
 func UpdateTask(log *slog.Logger, db IUpdateTask) http.HandlerFunc {
@@ -21,7 +21,7 @@ func UpdateTask(log *slog.Logger, db IUpdateTask) http.HandlerFunc {
 		log.Info("Обновление задачи")
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		
-		var task models.SearchTask
+		var task models.Task
 		err := render.DecodeJSON(r.Body, &task)
 		if err != nil {
 			log.Error("Ошибка при декодировании обновляемой задачи", logger.Err(err))

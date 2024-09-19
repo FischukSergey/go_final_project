@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/FischukSergey/go_final_project/internal/lib/jwtoken"
@@ -29,8 +28,7 @@ func AuthToken(log *slog.Logger) func(next http.Handler) http.Handler {
 
 		Authorize := func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
-			pass := ""
-			pass = os.Getenv("TODO_PASSWORD")
+			pass := models.Pass
 
 			if len(pass) == 0 { //если пароль не установлен, то аутентификацию не проводим
 				log.Debug("пароль не установлен")

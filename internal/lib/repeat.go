@@ -46,9 +46,39 @@ func NextDate(now time.Time, date string, repeat string) (string, error) {
 		}
 	
 	case "m":
+
 		return "", fmt.Errorf("не реализовано") // TODO: реализовать
 	
-	case "w":
+	case "w": 
+		// weekdays:=strings.Split(repeatParts[1],",") // получаем дни недели
+		// if len(weekdays) == 0 {
+		// 	return "", fmt.Errorf("не указан параметр дней недели")
+		// }
+		// weekdaysInt:=make([]int,0,len(weekdays)) // преобразуем дни недели в слайс int
+		// for _, day := range weekdays {  // валидируем дни недели
+		// 	dayInt, err := strconv.Atoi(day)
+		// 	if err != nil {
+		// 		return "", err
+		// 	}
+		// 	if dayInt <= 0 || dayInt > 7 {
+		// 		return "", fmt.Errorf("недопустимый день недели: %s", day)
+		// 	}
+		// 	weekdaysInt = append(weekdaysInt, dayInt)
+		// }
+		// sort.Ints(weekdaysInt) // сортируем дни недели
+
+		// for newDate.Before(now) {
+		// 	for _, weekday := range weekdaysInt { // проверяем каждый день недели из списка
+		// 		for newDate.Weekday() != time.Weekday(weekday) { // если день недели не совпадает с текущим, то добавляем день
+		// 			newDate = newDate.AddDate(0, 0, 1) // Move to the next day
+		// 		}
+		// 		// If the found date is before now, we need to add a week
+		// 		if newDate.Before(now) {
+		// 			newDate = newDate.AddDate(0, 0, 7)
+		// 		}
+		// 	}
+		// 	newDate = newDate.AddDate(0, 0, 7) // если новая дата меньше текущей, то добавляем еще раз дни
+		// }
 		return "", fmt.Errorf("не реализовано") // TODO: реализовать
 	
 	default:

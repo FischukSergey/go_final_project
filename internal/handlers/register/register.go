@@ -3,7 +3,6 @@ package register
 import (
 	"log/slog"
 	"net/http"
-	"os"
 
 	"github.com/FischukSergey/go_final_project/internal/lib/jwtoken"
 	"github.com/FischukSergey/go_final_project/internal/logger"
@@ -12,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Register функция для регистрации пользователя
+// Register функция для аутентификации пользователя
 func Register(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -33,8 +32,8 @@ func Register(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		pass := os.Getenv("TODO_PASSWORD") //получаем пароль из переменной окружения
-		if pass == "" {                    //если пароль не установлен, то возвращаем ошибку
+		pass := models.Pass //получаем пароль из переменной окружения
+		if pass == "" {     //если пароль не установлен, то возвращаем ошибку
 			log.Error("пароль не установлен")
 			w.WriteHeader(http.StatusInternalServerError)
 			render.JSON(w, r, models.ErrorResponse{Error: "пароль не установлен"})

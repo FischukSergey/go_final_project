@@ -3,8 +3,7 @@ package jwtoken
 import (
 	"errors"
 	"fmt"
-	"os"
-
+	
 	"github.com/FischukSergey/go_final_project/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -52,7 +51,7 @@ func GetJWTokenUserID(tokenString string) (int, error) {
 	userID := claims["uid"].(float64)
 	encryptedPassword := claims["encrypted_password"].(string)
 	//проверяем не изменился ли пароль с момента создания токена
-	if err := bcrypt.CompareHashAndPassword([]byte(encryptedPassword), []byte(os.Getenv("TODO_PASSWORD"))); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(encryptedPassword), []byte(models.Pass)); err != nil {
 		return -1, fmt.Errorf("пароль изменился	: %w", err)
 	}
 

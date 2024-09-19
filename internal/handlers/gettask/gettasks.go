@@ -14,7 +14,7 @@ import (
 
 // IGetTasks интерфейс для получения задач
 type IGetTasks interface {
-	GetTasks(ctx context.Context, dateTask, search string) ([]models.SearchTask, error)
+	GetTasks(ctx context.Context, dateTask, search string) ([]models.Task, error)
 }
 
 // GetTasks получает задачи из базы данных
@@ -34,7 +34,7 @@ func GetTasks(log *slog.Logger, db IGetTasks) http.HandlerFunc {
 			search = ""
 		}
 		fmt.Println("task search:", search, "date:", dateTask)
-		var tasks []models.SearchTask
+		var tasks []models.Task
 		log.Info("Получение задач", slog.String("dateTask", dateTask), slog.String("search", search))
 		tasks, err = db.GetTasks(r.Context(), dateTask, search)
 		if err != nil {

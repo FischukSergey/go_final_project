@@ -6,7 +6,9 @@ import (
 	"time"
 
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
+	"github.com/FischukSergey/go_final_project/internal/logger"
 )
+
 // NextDate - обработчик для получения следующей даты задачи
 func NextDate(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +40,11 @@ func NextDate(log *slog.Logger) http.HandlerFunc {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(nextDate))
+		_, err = w.Write([]byte(nextDate))
+		if err != nil {
+			log.Error("Ошибка записи ответа", logger.Err(err))
+			http.Error(w, "Ошибка записи ответа", http.StatusInternalServerError)
+			return
+		}
 	}
 }

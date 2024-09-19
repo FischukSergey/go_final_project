@@ -15,8 +15,8 @@ import (
 // IDoneTask - интерфейс для работы с задачами
 type IDoneTask interface {
 	DeleteTask(ctx context.Context, idTask int) error
-	GetIDTask(ctx context.Context, idTask int) (models.SearchTask, error)
-	UpdateTask(ctx context.Context, task models.SearchTask) error
+	GetIDTask(ctx context.Context, idTask int) (models.Task, error)
+	UpdateTask(ctx context.Context, task models.Task) error
 }
 
 // DoneTask - обработчик для завершения задачи
@@ -43,7 +43,7 @@ func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 			return
 		}
 
-		var task models.SearchTask
+		var task models.Task
 		//получаем задачу по id
 		task, err = db.GetIDTask(r.Context(), idTask)
 		if err != nil {
@@ -53,7 +53,6 @@ func DoneTask(log *slog.Logger, db IDoneTask) http.HandlerFunc {
 			return
 		}
 
-		// проверяем, что repeat не пустой
 		switch {
 
 		case task.Repeat != "": //если задача повторяется, то обновляем дату задачи

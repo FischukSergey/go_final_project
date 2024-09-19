@@ -62,7 +62,7 @@ func NewStorage(storagePath string, log *slog.Logger) (*Storage, error) {
 }
 
 // SaveTask функция сохранения задачи
-func (s *Storage) SaveTask(task models.SaveTask) (string, error) {
+func (s *Storage) SaveTask(task models.Task) (string, error) {
 	ctx := context.Background()
 	const op = "storage.SaveTask"
 	log := s.log.With(

@@ -12,7 +12,7 @@ import (
 
 // IGetIDTask - интерфейс для получения задачи по id
 type IGetIDTask interface {
-	GetIDTask(ctx context.Context, id int) (models.SearchTask, error)
+	GetIDTask(ctx context.Context, id int) (models.Task, error)
 }
 
 // GetIDTask - обработчик для получения задачи по id
@@ -37,7 +37,7 @@ func GetIDTask(log *slog.Logger, db IGetIDTask) http.HandlerFunc {
 			return
 		}
 
-		var task models.SearchTask
+		var task models.Task
 
 		task, err = db.GetIDTask(r.Context(), idTask) //получаем задачу по id
 		if err != nil { 

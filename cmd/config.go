@@ -1,8 +1,9 @@
 package main
 
 import (
-	//"flag"
 	"os"
+
+	"github.com/FischukSergey/go_final_project/internal/models"
 )
 
 // уровни логирования
@@ -24,13 +25,6 @@ func ParseFlags() {
 	defaultLevelLogger := "local"                  //уровень логирования по умолчанию
 	defaultDatabaseDSN := "./storage/scheduler.db" //наименование базы данных по умолчанию
 
-	// flag.StringVar(&FlagServerPort, "a", defaultRunAddr, "port to run server")        //инициализация флага адреса порта
-	// flag.StringVar(&FlagDatabaseDSN, "d", defaultDatabaseDSN, "name database SQLite") //инициализация флага наименования базы данных
-	// flag.StringVar(&FlagLevelLogger, "l", defaultLevelLogger, "log level")            //инициализация флага уровня логирования
-
-	//парсинг флагов	
-	//flag.Parse()
-
 	//парсинг переменных окружения
 
 	if envRunAddr := os.Getenv("TODO_PORT"); envRunAddr != "" {
@@ -47,5 +41,10 @@ func ParseFlags() {
 		FlagDatabaseDSN = envDatabaseDSN
 	} else {
 		FlagDatabaseDSN = defaultDatabaseDSN
+	}
+	if envPassword := os.Getenv("TODO_PASSWORD"); envPassword != "" {
+		models.Pass	 = envPassword
+	} else {
+		models.Pass = ""
 	}
 }

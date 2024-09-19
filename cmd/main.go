@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	ParseFlags()                                        //инициализируем флаги/переменные окружения конфигурации сервера
+	ParseFlags()
 	log := setupLogger(FlagLevelLogger)                 //инициализируем логер с заданным уровнем
 	db, err := storage.NewStorage(FlagDatabaseDSN, log) //инициализируем хранилище
 	if err != nil {
@@ -37,9 +37,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	//подключаем middleware авторизации
-	//	r.Use(auth.AuthToken(log))
-
+	
 	// Создаем файловый сервер для директории web
 	webDir := http.Dir("web")
 	webFileServer := http.FileServer(webDir)
@@ -72,7 +70,7 @@ func main() {
 
 	log.Info("Запуск сервера")
 	go func() {
-		if err := srv.ListenAndServe(); err != nil {
+		if err := srv.ListenAndServe(); err != nil || err != http.ErrServerClosed {
 			log.Error("Ошибка при запуске сервера", logger.Err(err))
 		}
 	}()
@@ -96,7 +94,7 @@ func main() {
 	}
 	log.Info("api server остановлен")
 
-	//последним по defer db.Close() закрываем базу данных
+
 }
 
 // setupLogger - функция инициализации логера

@@ -9,7 +9,7 @@ import (
 	"github.com/FischukSergey/go_final_project/internal/models"
 )
 
-func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]models.SearchTask, error) {
+func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]models.Task, error) {
 	op := "storage.GetTasks"
 	log := s.log.With(
 		slog.String("op", op),
@@ -73,10 +73,10 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 		defer rows.Close()
 	}
 	//создаем массив для хранения задач
-	var tasks = make([]models.SearchTask, 0, models.LimitTasks)
+	var tasks = make([]models.Task, 0, models.LimitTasks)
 
 	for rows.Next() {
-		var task models.SearchTask
+		var task models.Task
 		err := rows.Scan(&task.ID, &task.Date, &task.Title, &task.Comment, &task.Repeat)
 		if err != nil {
 			log.Error("Ошибка при сканировании задачи", logger.Err(err))

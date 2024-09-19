@@ -1,5 +1,4 @@
 // Package deletetask содержит обработчик для удаления задачи
-//go:generate mockgen -source=deletetask.go -destination=../../tests/mocks/deletetask/deletetask_mock.go -package=deletetask_mock
 package deletetask
 
 import (
