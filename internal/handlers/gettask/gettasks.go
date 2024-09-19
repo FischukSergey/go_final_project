@@ -2,7 +2,6 @@ package gettask
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -28,12 +27,12 @@ func GetTasks(log *slog.Logger, db IGetTasks) http.HandlerFunc {
 
 		search = r.URL.Query().Get("search")
 		//пробуем парсить дату
-		date, err := time.Parse("02.01.2006", search)
+		date, err := time.Parse(models.SearchDate, search)
 		if err == nil {
-			dateTask = date.Format("20060102") //если получилось парсить, то присваиваем дату в нужном формате
+			dateTask = date.Format(models.DateFormat) //если получилось парсить, то присваиваем дату в нужном формате
 			search = ""
 		}
-		fmt.Println("task search:", search, "date:", dateTask)
+
 		var tasks []models.Task
 		log.Info("Получение задач", slog.String("dateTask", dateTask), slog.String("search", search))
 		tasks, err = db.GetTasks(r.Context(), dateTask, search)

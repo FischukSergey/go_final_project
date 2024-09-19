@@ -18,7 +18,7 @@ func (s *Storage) GetIDTask(ctx context.Context, idTask int) (models.Task, error
 	log.Info("Получение задачи по id", slog.Int("id task", idTask))
 
 	stmt, err := s.db.PrepareContext(ctx, `
-	SELECT * FROM scheduler WHERE id = ?;
+	SELECT id, date, title, comment, repeat FROM scheduler WHERE id = ?;
 	`)
 	if err != nil {
 		log.Error("Ошибка при подготовке запроса", logger.Err(err))

@@ -58,7 +58,7 @@ func (s *Storage) GetTasks(ctx context.Context, dateTask, search string) ([]mode
 	default: //если не задано ничего, то выбираем все задачи
 		log.Info("Получение всех задач")
 		stmt, err := s.db.PrepareContext(ctx, `
-	SELECT * FROM scheduler ORDER BY date LIMIT ?;
+	SELECT id, date, title, comment, repeat FROM scheduler ORDER BY date LIMIT ?;
 	`)
 		if err != nil {
 			log.Error("Ошибка при подготовке запроса на получение всех задач", logger.Err(err))

@@ -2,17 +2,19 @@ FROM golang:1.22
 WORKDIR /app
 #копируем все файлы, включая DB
 COPY . .
-RUN ls -la
+
 #грузим зависимости
-RUN go mod tidy
+RUN go mod download
 
 #монтируем приложение
-RUN CGO_ENABLED=1 GOOS=linux go build -o /diplom /app/cmd/*.go
+RUN go build -o /diplom /app/cmd/*.go
 
 #определяем переменные среды окружения
-#ENV TODO_PORT=127.0.0.1:7540
-#ENV TODO_DBFILE=/app/storage/scheduler.db
-#ENV LOG_LEVEL=local
+ENV CGO_ENABLED=1
+ENV GOOS=linux
+ENV TODO_PORT=:7540
+ENV TODO_DBFILE=/app/storage/scheduler.db
+ENV LOG_LEVEL=local
 
 # Запускаем приложение
 CMD ["/diplom"]

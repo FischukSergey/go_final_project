@@ -25,7 +25,7 @@ func Verification(task models.Task) (string, error) {
 	var dateTask time.Time = time.Now()
 	var err error
 	if task.Date != "" {
-		dateTask, err = time.Parse("20060102", task.Date) //парсим дату задачи в формате "20060102"
+		dateTask, err = time.Parse(models.DateFormat, task.Date) //парсим дату задачи в формате "20060102"
 		if err != nil {
 			log.Error("Ошибка при парсинге даты задачи", logger.Err(err))
 			return "", fmt.Errorf("неверный формат даты задачи")
@@ -36,26 +36,19 @@ func Verification(task models.Task) (string, error) {
 	now := time.Now()
 
 	var nextDateTask string
-	nextDateTask = now.Format("20060102") //дата будет текущей, если не будет вычислена новая
+	nextDateTask = now.Format(models.DateFormat) //дата будет текущей, если не будет вычислена новая
 
 	switch {
 	//если есть правило повторения и дата задачи в прошлом, то ищем следующую дату задачи
 	case task.Repeat != "" && dateTask.Before(now.AddDate(0, 0, -1)):
-		nextDateTask, err = NextDate(now, dateTask.Format("20060102"), task.Repeat)
+		nextDateTask, err = NextDate(now, dateTask.Format(models.DateFormat), task.Repeat)
 		if err != nil {
 			log.Error("Ошибка при получении следующей даты задачи", logger.Err(err))
 			return "", fmt.Errorf("ошибка при получении следующей даты задачи")
 		}
 	case dateTask.After(now.AddDate(0, 0, -1)): //Если дата задач в будущем
-		nextDateTask = dateTask.Format("20060102")
+		nextDateTask = dateTask.Format(models.DateFormat)
 	}
-	//если есть правило повторения и дата задачи в прошлом, то ищем следующую дату задачи
-	//if task.Repeat != "" && dateTask.Before(now.AddDate(0, 0, -1)) {
-	//	nextDateTask, err = NextDate(now, dateTask.Format("20060102"), task.Repeat)
-	//	if err != nil {
-	//		log.Error("Ошибка при получении следующей даты задачи", logger.Err(err))
-	//		return "", fmt.Errorf("ошибка при получении следующей даты задачи")
-	//	}
-	//}
+
 	return nextDateTask, nil
 }

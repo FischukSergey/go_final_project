@@ -7,6 +7,7 @@ import (
 
 	repeatrule "github.com/FischukSergey/go_final_project/internal/lib"
 	"github.com/FischukSergey/go_final_project/internal/logger"
+	"github.com/FischukSergey/go_final_project/internal/models"
 )
 
 // NextDate - обработчик для получения следующей даты задачи
@@ -25,7 +26,7 @@ func NextDate(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 		
-		nowDate, err := time.Parse("20060102", now) //парсим дату в формате YYYYMMDD
+		nowDate, err := time.Parse(models.DateFormat, now) //парсим дату в формате YYYYMMDD
 		if err != nil {
 			log.Error("Invalid date now", "error", err)
 			http.Error(w, "Invalid date now", http.StatusBadRequest)

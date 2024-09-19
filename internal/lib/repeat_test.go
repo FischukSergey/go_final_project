@@ -30,13 +30,13 @@ func TestNextDate(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "test y",
+			name: "test w 7",
 			args: args{
 				now:    time.Date(2024, 1, 26, 0, 0, 0, 0, time.UTC),
-				date:   "20240229",
-				repeat: "y",
+				date:   "20230113",
+				repeat: "w 7",
 			},
-			want:    "20250301",
+			want:    "20240128",
 			wantErr: nil,
 		},
 	}

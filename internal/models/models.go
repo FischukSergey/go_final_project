@@ -2,7 +2,9 @@ package models
 
 // ограничения на количество задач в ответе
 const (
-	LimitTasks = 10 //ограничение на количество задач в ответе
+	LimitTasks = 10           //ограничение на количество задач в ответе
+	SearchDate = "02.01.2006" //формат даты для поиска
+	DateFormat = "20060102"   //формат даты для записи в базу
 )
 
 // Pass пароль для доступа к API
@@ -26,7 +28,7 @@ type TaskResponse struct {
 // SearchTasksResponse структура для ответа на запрос поиска задачи
 type SearchTasksResponse struct {
 	Tasks []Task `json:"tasks"`
-	Error string       `json:"error,omitempty"`
+	Error string `json:"error,omitempty"`
 }
 
 // ErrorResponse структура для ответа на запрос с ошибкой
